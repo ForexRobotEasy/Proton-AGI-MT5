@@ -1,0 +1,57 @@
+mql5
+//+------------------------------------------------------------------+
+//|                                               Proton AGI MT5     |
+//|                                         Developer: Forex Robot Easy Team   |
+//|                                                Website: forexroboteasy.com  |
+//+------------------------------------------------------------------+
+
+// Include necessary libraries and headers
+#include <Trade\Trade.mqh>
+#include <Math\Math.mqh>
+
+// Define constants
+#define SYMBOL 'EURUSD'
+#define LOT_SIZE 0.01
+#define TAKE_PROFIT 100
+#define STOP_LOSS 50
+
+// Initialize trade object
+CTrade trade;
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//|                                                                  |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+   // Get current market conditions
+   double ask = SymbolInfoDouble(SYMBOL, SYMBOL_ASK);
+   double bid = SymbolInfoDouble(SYMBOL, SYMBOL_BID);
+   
+   // Calculate stop loss and take profit levels
+   double stopLoss = NormalizeDouble(bid - STOP_LOSS * _Point, _Digits);
+   double takeProfit = NormalizeDouble(ask + TAKE_PROFIT * _Point, _Digits);
+   
+   // Place a buy trade
+   if (SomeCondition)
+   {
+      trade.Buy(Symbol(), LOT_SIZE, ask, stopLoss, takeProfit, 'Buy Order');
+   }
+   
+   // Place a sell trade
+   if (SomeOtherCondition)
+   {
+      trade.Sell(Symbol(), LOT_SIZE, bid, stopLoss, takeProfit, 'Sell Order');
+   }
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//|                                                                  |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+{
+   // Close all open trades before shutting down
+   trade.CloseAll();
+}
+
